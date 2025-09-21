@@ -18,6 +18,11 @@ public class Quote {
         this.quote = quote;
     }
 
+    Quote(Long id, String quote) {
+        this.id = id;
+        this.quote = quote;
+    }
+
     public Long getId() {
         return this.id;
     }

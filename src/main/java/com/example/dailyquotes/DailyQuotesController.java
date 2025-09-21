@@ -30,11 +30,9 @@ public class DailyQuotesController {
     ResponseEntity<Optional<Quote>> getQuotes (@PathVariable Long requestedId) {
         Optional<Quote> quote = repository.findById(requestedId);
         if (quote.isPresent()) {
-            return ResponseEntity.ok(repository.findById(requestedId));
+            return ResponseEntity.ok(quote);
         }
-        else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.notFound().build();
 
     }
 
@@ -45,5 +43,27 @@ public class DailyQuotesController {
                 .status(201)
                 .body(saved);
     }
+
+    @DeleteMapping("/{requestedId}")
+    private ResponseEntity<Void> deleteQuote(@PathVariable Long requestedId) {
+        Optional<Quote> quote = repository.findById(requestedId);
+        if (quote.isPresent()) {
+            repository.deleteById(requestedId);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
+    @PutMapping("/{requestedId}")
+    private ResponseEntity<Void> putQuote(@PathVariable Long requestedId, @RequestBody Quote quoteUpdate) {
+        Optional<Quote> quote = repository.findById(requestedId);
+        if (quote.isPresent()) {
+            Quote updatedQuote = new Quote(requestedId, quoteUpdate.getQuote());
+            repository.save(updatedQuote);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.notFound().build();
+    }
+
 }
 
